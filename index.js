@@ -130,3 +130,18 @@ function validateAssignments(assignmentGroup) {
         console.log("Finished checking assignment information");
     }
 }
+
+function filterDueDates(assignmentGroup) {
+    // Ensure assignments exist and are an array
+    if (!assignmentGroup.assignments || !(assignmentGroup.assignments instanceof Array)) {
+        throw new Error("Assignments data is missing or invalid.");
+    }
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); // Sets to beginning of the day/midnight
+
+    return assignmentGroup.assignments.filter(assignment => {
+        const dueDate = new Date(assignment.due_at);
+        return dueDate <= today; // Only keep assignments due today or earlier
+    });
+}
