@@ -151,22 +151,17 @@ function applyLateDeduct(learnerSubmissions, assignmentGroup) {
         throw new Error("Invalid learner submissions data.");
     }
 
-    const assignments = new Map(assignmentGroup.assignments.map(a => [a.id, a]));
-
-    return learnerSubmissions.map(submission => {
+    learnerSubmissions.forEach(submission => {
+        // Find the matching assignment
         const assignment = assignmentGroup.assignments.find(a => a.id === submission.assignment_id);
-        if (!assignment) return submission;
+        if (!assignment) return; 
 
         const dueDate = new Date(assignment.due_at);
         const submittedDate = new Date(submission.submission.submitted_at);
         const latePenalty = submittedDate > dueDate ? assignment.points_possible * 0.10 : 0;
 
-        return {
-            ...submission,
-            submission: {
-                ...submission.submission,
-                adjusted_score: Math.max(submission.submission.score - latePenalty, 0),
-            }
-        };
+        // Apply late penalty directly (mutating the object)score = Math.max(submission.submission.score - latePenalty, 0);
     });
+
+    return learnerSubmissions; 
 }
