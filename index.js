@@ -147,7 +147,26 @@ function filterDueDates(assignmentGroup) {
 }
 
 function applyLateDeduct(learnerSubmissions, assignmentGroup) {
-    if (!learnerSubmissions || !(learnerSubmissions instanceof Array)) {
-        throw new Error("Learner data missing")
+    if (!(learnerSubmissions instanceof Array)) {
+        throw new Error("Invalid learner submissions data.");
     }
+
+    const assignments = new Map(assignmentGroup.assignments.map(a => [a.id, a]));
+
+    return learnerSubmissions.map(submission => {
+        const assignment = assignmentGroup.assignments.find(a => a.id === submission.assignment_id);
+        if (!assignment) return submission;
+
+        const dueDate = new Date(assignment.due_at);
+        const submittedDate = new Date(submission.submission.submitted_at);
+        const latePenalty = submittedDate > dueDate ? assignment.points_possible * 0.10 : 0;
+
+        return {
+            ...submission,
+            submission: {
+                ...submission.submission,
+                adjusted_score: Math.max(submission.submission.score - latePenalty, 0),
+            }
+        };
+    });
 }
