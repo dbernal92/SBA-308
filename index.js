@@ -86,7 +86,7 @@ function validateCourse(courseInfo, assignmentGroup) {
     try {
         if (courseInfo.id !== assignmentGroup.course_id) {
             throw new Error("Course IDs do not match");
-        } 
+        }
         if (typeof courseInfo.id !== typeof assignmentGroup.course_id) {
             throw new Error("Course ID must be a number")
         }
@@ -94,26 +94,39 @@ function validateCourse(courseInfo, assignmentGroup) {
             throw new Error("Missing course ID")
         }
     } catch (error) {
-            console.log("Please check course ID and try again");
-        } finally {
-            console.log("Course validation complete")
-        }
+        console.log("Please check course ID and try again");
+    } finally {
+        console.log("Course validation complete")
+    }
 }
+
 // Function to validate assignment information
-function validateAssignments(assignmentGroup, assignmentInfo) {
-    try{
-        if (!(assignmentGroup.assignments) || !(assignmentGroup.assignments instanceof Array)) {
+function validateAssignments(assignmentGroup) {
+    try {
+        // Validate assignments exist and are an array
+        if (!assignmentGroup.assignments || !(assignmentGroup.assignments instanceof Array)) {
             throw new Error("Assignment information missing");
         }
-        if (assignmentGroup.assignments.length === 0)
+        if (assignmentGroup.assignments.length === 0) {
             throw new Error("No assignments in group");
-    } catch (error) {
-        console.log("Check assignment information")
-    } finally {
-        console.log("Assignment validation complete")
-    }
+        }
 
-    assignmentGroup.assignments.forEach(assignment => {
-        if ((!assignment.id) || typeof assignment.id !== "number") 
+        // Validate each assignment
+        assignmentGroup.assignments.forEach(assignment => {
+            if (!assignment.id || typeof assignment.id !== "number") {
+                throw new Error("Assignment ID invalid");
+            }
+            if (!assignment.due_at || isNaN(Date.parse(assignment.due_at))) {
+                throw new Error("Assignment date invalid");
+            }
+            if (typeof assignment.points_possible !== "number" || assignment.points_possible <= 0) {
+                throw new Error("Assignment has invalid possible points.");
+            }
+        });
+        console.log("Assignment validation complete");
+    } catch (error) {
+        console.log("Error:", error.message);
+    } finally {
+        console.log("Finished checking assignment information");
     }
 }
