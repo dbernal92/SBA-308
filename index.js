@@ -145,3 +145,9 @@ function filterDueDates(assignmentGroup) {
         return dueDate <= today; // Only keep assignments due today or earlier
     });
 }
+
+function applyLateDeduct(learnerSubmissions, assignmentGroup) {
+    if (!learnerSubmissions || !(learnerSubmissions instanceof Array)) {
+        throw new Error("Learner data missing")
+    }
+}
