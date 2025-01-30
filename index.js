@@ -247,7 +247,7 @@ function avgWeighted(learnerSubmissions, assignmentGroup) {
 
         learnerScores[submission.learner_id].totalWeightedScore += adjustedScore;
         learnerScores[submission.learner_id].totalPossiblePoints += assignment.points_possible;
-        learnerScores[submission.learner_id].assignmentScores[assignment.id] = (adjustedScore / assignment.points_possible) * 100;
+        learnerScores[submission.learner_id].assignmentScores[assignment.id] = Math.round((adjustedScore / assignment.points_possible) * 100);
 
     });
 
@@ -308,7 +308,6 @@ function getLearnerData(courseInfo, assignmentGroup, learnerSubmissions) {
         results: results
     };
 }
-
 
 // Call getLearnerData for each course to test both in desired format
 const result1 = getLearnerData(courseInfo[0], assignmentGroup[0], learnerSubmissions);
