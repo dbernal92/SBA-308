@@ -154,14 +154,19 @@ function applyLateDeduct(learnerSubmissions, assignmentGroup) {
     learnerSubmissions.forEach(submission => {
         // Find the matching assignment
         const assignment = assignmentGroup.assignments.find(a => a.id === submission.assignment_id);
-        if (!assignment) return; 
+        if (!assignment) return; // Skip if assignment is missing
 
         const dueDate = new Date(assignment.due_at);
         const submittedDate = new Date(submission.submission.submitted_at);
-        const latePenalty = submittedDate > dueDate ? assignment.points_possible * 0.10 : 0;
 
-        // Apply late penalty directly (mutating the object)score = Math.max(submission.submission.score - latePenalty, 0);
+        let latePenalty = 0; // Default to no penalty
+        if (submittedDate > dueDate) {
+            latePenalty = assignment.points_possible * 0.10;
+        }
+
+        // Apply point deduction
+        submission.submission.adjusted_score = Math.max(submission.submission.score - latePenalty, 0);
     });
 
-    return learnerSubmissions; 
+    return learnerSubmissions;
 }
