@@ -238,10 +238,10 @@ function avgWeighted(learnerSubmissions, assignmentGroup) {
         const adjustedScore = submission.submission.adjusted_score || submission.submission.score;
 
         if (!(submission.learner_id in learnerScores)) {
-            learnerScores[submission.learner_id] = { 
-                totalWeightedScore: 0, 
+            learnerScores[submission.learner_id] = {
+                totalWeightedScore: 0,
                 totalPossiblePoints: 0,
-                assignmentScores: {} 
+                assignmentScores: {}
             };
         }
 
@@ -262,12 +262,14 @@ function avgWeighted(learnerSubmissions, assignmentGroup) {
 
         let avgScore = 0;
         if (data.totalPossiblePoints > 0) {
-            avgScore = (data.totalWeightedScore / data.totalPossiblePoints) * 100;
+            avgScore = Math.round((data.totalWeightedScore / data.totalPossiblePoints) * 100);
         }
 
         console.log(`Computed Avg: ${avgScore}`); // Debugging line
 
         const result = { id: Number(learner_id), avg: avgScore };
+
+        console.log(avgScore);
 
         for (const key in data.assignmentScores) {
             result[key] = data.assignmentScores[key];
@@ -296,11 +298,21 @@ function getLearnerData(courseInfo, assignmentGroup, learnerSubmissions) {
 
     // Apply late penalties
     const updatedSubmissions = applyLateDeduct(learnerSubmissions, filteredAssignments);
-    
+
     // Compute weighted averages and return final results
-    return avgWeighted(updatedSubmissions, filteredAssignments);
+    const results = avgWeighted(updatedSubmissions, filteredAssignments);
+
+    // Return course name along with results
+    return {
+        courseName: courseInfo.name, // Add the course name
+        results: results
+    };
 }
 
+
 // Call getLearnerData for each course to test both in desired format
-console.log(getLearnerData(courseInfo[0], assignmentGroup[0], learnerSubmissions));
-console.log(getLearnerData(courseInfo[1], assignmentGroup[1], learnerSubmissions));
+const result1 = getLearnerData(courseInfo[0], assignmentGroup[0], learnerSubmissions);
+console.log(`Course: ${result1.courseName}`, result1.results);
+
+const result2 = getLearnerData(courseInfo[1], assignmentGroup[1], learnerSubmissions);
+console.log(`Course: ${result2.courseName}`, result2.results);
