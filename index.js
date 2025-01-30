@@ -1,39 +1,82 @@
 // The provided course information.
-const courseInfo = {
-    id: 451,
-    name: "Introduction to JavaScript"
-};
+const courseInfo = [
+    {
+        id: 451,
+        name: "Introduction to JavaScript"
+    },
+    {
+        id: 789,
+        name: "Advanced JavaScript"
+    }
+];
+
 
 // The provided assignment group.
-const assignmentGroup = {
-    id: 12345,
-    name: "Fundamentals of JavaScript",
-    course_id: 451,
-    group_weight: 25,
-    assignments: [
-        {
-            id: 1,
-            name: "Declare a Variable",
-            due_at: "2023-01-25",
-            points_possible: 50
-        },
-        {
-            id: 2,
-            name: "Write a Function",
-            due_at: "2023-02-27",
-            points_possible: 150
-        },
-        {
-            id: 3,
-            name: "Code the World",
-            due_at: "3156-11-15",
-            points_possible: 500
-        }
-    ]
-};
+const assignmentGroup = [
+    {
+        id: 12345,
+        name: "Fundamentals of JavaScript",
+        course_id: 451,
+        group_weight: 25,
+        assignments: [
+            {
+                id: 1,
+                name: "Declare a Variable",
+                due_at: "2023-01-25",
+                points_possible: 50
+            },
+            {
+                id: 2,
+                name: "Write a Function",
+                due_at: "2023-02-27",
+                points_possible: 150
+            },
+            {
+                id: 3,
+                name: "Code the World",
+                due_at: "3156-11-15", // Future date, should be ignored
+                points_possible: 500
+            },
+            {
+                id: 4,
+                name: "Final Project",
+                due_at: "2024-01-29", // Due today
+                points_possible: 300
+            }
+        ]
+    },
+    {
+        id: 67890,
+        name: "Advanced JavaScript Challenges",
+        course_id: 789,
+        group_weight: 30,
+        assignments: [
+            {
+                id: 10,
+                name: "Async Await",
+                due_at: "2024-01-20",
+                points_possible: 200
+            },
+            {
+                id: 11,
+                name: "Closures & Scope",
+                due_at: "2024-01-10",
+                points_possible: 100
+            },
+            {
+                id: 12,
+                name: "Higher-Order Functions",
+                due_at: "2024-02-01",
+                points_possible: 250 // Future assignment, should be ignored
+            }
+        ]
+    }
+];
+
 
 // The provided learner submission data.
 const learnerSubmissions = [
+    // JavaScript Course Learners
     {
         learner_id: 125,
         assignment_id: 1,
@@ -43,35 +86,44 @@ const learnerSubmissions = [
         }
     },
     {
-        learner_id: 125,
-        assignment_id: 2,
-        submission: {
-            submitted_at: "2023-02-12",
-            score: 150
-        }
-    },
-    {
-        learner_id: 125,
-        assignment_id: 3,
-        submission: {
-            submitted_at: "2023-01-25",
-            score: 400
-        }
-    },
-    {
-        learner_id: 132,
-        assignment_id: 1,
-        submission: {
-            submitted_at: "2023-01-24",
-            score: 39
-        }
-    },
-    {
         learner_id: 132,
         assignment_id: 2,
         submission: {
-            submitted_at: "2023-03-07",
+            submitted_at: "2023-03-07", // Late submission, should apply 10% penalty
             score: 140
+        }
+    },
+    {
+        learner_id: 150, // New learner with an assignment submitted late
+        assignment_id: 4,
+        submission: {
+            submitted_at: "2024-01-30", // Late by one day
+            score: 270
+        }
+    },
+    // Advanced JavaScript Course Learners
+    {
+        learner_id: 200,
+        assignment_id: 10,
+        submission: {
+            submitted_at: "2024-01-19",
+            score: 180
+        }
+    },
+    {
+        learner_id: 205,
+        assignment_id: 11,
+        submission: {
+            submitted_at: "2024-01-11", // Late by one day
+            score: 90
+        }
+    },
+    {
+        learner_id: 210,
+        assignment_id: 12,
+        submission: {
+            submitted_at: "2024-01-31",
+            score: 220 // Future assignment, should be ignored
         }
     }
 ];
