@@ -177,7 +177,7 @@ function validateAssignments(assignmentGroup) {
 // Function to filter out assignments that are not yet due
 function filterDueDates(assignmentGroup) {
     if (!assignmentGroup.assignments || !(assignmentGroup.assignments instanceof Array)) {
-        throw new Error("Assignments data is missing or invalid.");
+        throw new Error("Assignments data is missing or invalid."); // Set to beginning of day/midnight
     }
 
     const today = new Date();
@@ -192,7 +192,7 @@ function filterDueDates(assignmentGroup) {
     });
 }
 
-// Function to apply late penalties
+// Function to apply late penalties (10% deduction)
 function applyLateDeduct(learnerSubmissions, assignmentGroup) {
     if (!(learnerSubmissions instanceof Array)) {
         throw new Error("Invalid learner submissions data.");
@@ -218,6 +218,7 @@ function applyLateDeduct(learnerSubmissions, assignmentGroup) {
     return learnerSubmissions;
 }
 
+// Function to calculate weighted averages
 function avgWeighted(learnerSubmissions, assignmentGroup) {
     if (!(learnerSubmissions instanceof Array)) {
         throw new Error("Invalid learner submission data.");
@@ -278,7 +279,7 @@ function avgWeighted(learnerSubmissions, assignmentGroup) {
     return formattedResults;
 }
 
-
+// Main function to process learner data
 function getLearnerData(courseInfo, assignmentGroup, learnerSubmissions) {
     // Validate course and assignment data
     validateCourse(courseInfo, assignmentGroup);
@@ -300,6 +301,6 @@ function getLearnerData(courseInfo, assignmentGroup, learnerSubmissions) {
     return avgWeighted(updatedSubmissions, filteredAssignments);
 }
 
-// Call getLearnerData for each course to test both
-console.log(getLearnerData(courseInfo[0], assignmentGroup[0], learnerSubmissions));
-console.log(getLearnerData(courseInfo[1], assignmentGroup[1], learnerSubmissions));
+// Call getLearnerData for each course to test both in desired format
+console.log(getLearnerData("Course: Introduction to JavaScript", courseInfo[0], assignmentGroup[0], learnerSubmissions));
+console.log(getLearnerData("Course: Advanced JavaScript", courseInfo[1], assignmentGroup[1], learnerSubmissions));
