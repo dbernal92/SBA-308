@@ -170,3 +170,79 @@ function applyLateDeduct(learnerSubmissions, assignmentGroup) {
 
     return learnerSubmissions;
 }
+
+function avgWeighted(learnerSubmissions, assignmentGroup) {
+    if (!(learnerSubmissions instanceof Array)) {
+        throw new Error("Invalid learner submission data.");
+    }
+    if (!assignmentGroup.assignments || !(assignmentGroup.assignments instanceof Array)) {
+        throw new Error("Invalid assignment group data.");
+    }
+
+    const learnerScores = {};
+
+    learnerSubmissions.forEach(submission => {
+        const assignment = assignmentGroup.assignments.find(a => a.id === submission.assignment_id);
+        if (!assignment) {
+            return; // Skip if no matching assignment
+        }
+        if (assignment.points_possible <= 0) {
+            return; // Skip if points_possible is 0 or negative
+        }
+        if (!submission.submission || typeof submission.submission.score !== "number") {
+            return; // Skip if submission is missing or invalid
+        }
+
+        const adjustedScore = submission.submission.adjusted_score || submission.submission.score;
+        const weight = assignment.points_possible;
+
+        if (!(submission.learner_id in learnerScores)) {
+            learnerScores[submission.learner_id] = { 
+                totalWeightedScore: 0, 
+                totalPossiblePoints: 0,
+                assignmentScores: {} 
+            };
+        }
+
+        learnerScores[submission.learner_id].totalWeightedScore += adjustedScore * weight;
+        learnerScores[submission.learner_id].totalPossiblePoints += weight;
+        learnerScores[submission.learner_id].assignmentScores[assignment.id] = (adjustedScore / weight) * 100;
+    });
+
+    const formattedResults = [];
+
+    Object.entries(learnerScores).forEach(([learner_id, data]) => {
+        const result = {
+            id: Number(learner_id)
+        };
+
+        if (data.totalPossiblePoints > 0) {
+            result.avg = (data.totalWeightedScore / data.totalPossiblePoints) * 100;
+        } else {
+            result.avg = 0;
+        }
+
+        Object.assign(result, data.assignmentScores);
+        formattedResults.push(result);
+    });
+
+    return formattedResults;
+}
+
+function getLearnerData(courseInfo, assignmentGroup, learnerSubmissions) {
+    // Validate course and assignment data
+    validateCourse(courseInfo, assignmentGroup);
+    validateAssignments(assignmentGroup);
+
+    // Create a new object manually instead of modifying the original
+    const filteredAssignments = {
+        course_id: assignmentGroup.course_id,
+        assignments: filterDueDates(assignmentGroup) // Only keep past-due assignments
+    };
+
+    // Apply late penalties
+    const updatedSubmissions = applyLateDeduct(learnerSubmissions, filteredAssignments);
+
+    // Compute weighted averages and return final results
+    return avgWeighted(updatedSubmissions, filteredAssignments);
+}
