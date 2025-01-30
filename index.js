@@ -302,5 +302,5 @@ function getLearnerData(courseInfo, assignmentGroup, learnerSubmissions) {
 }
 
 // Call getLearnerData for each course to test both in desired format
-console.log(getLearnerData("Course: Introduction to JavaScript", courseInfo[0], assignmentGroup[0], learnerSubmissions));
-console.log(getLearnerData("Course: Advanced JavaScript", courseInfo[1], assignmentGroup[1], learnerSubmissions));
+console.log(getLearnerData(courseInfo[0], assignmentGroup[0], learnerSubmissions));
+console.log(getLearnerData(courseInfo[1], assignmentGroup[1], learnerSubmissions));
